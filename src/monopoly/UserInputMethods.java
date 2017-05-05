@@ -11,8 +11,6 @@ package monopoly;
  *
  * */
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import cards.Card;
 import monopoly.GameScreen;
 import monopoly.Player;
@@ -21,7 +19,9 @@ import property.PropertyInfo;
 public class UserInputMethods {
 
 
-	private boolean movingPlayerToJail = true;//
+	private boolean movingPlayerToJail = true;
+	//used to hold what number card drawn we are on
+	private int cardNum = 0;
 
 
 	//This method moves the players around the board based on player x/y position and value of the dice. 
@@ -557,11 +557,10 @@ public class UserInputMethods {
 	public void drawCard(int tileType) {
 		GameScreen gameScreen = GameScreen.screen;
 		Card cardDrawn;
-		int cardNum = ThreadLocalRandom.current().nextInt(0, 16);//Random card number
+		
 		if (tileType == PropertyInfo.TYPE_CHANCE) {
 			cardDrawn = gameScreen.ChanceCards.get(cardNum);
-		}
-		else{
+		} else {
 			cardDrawn = gameScreen.ComChestCards.get(cardNum);
 		}
 		//Get card type
@@ -674,6 +673,13 @@ public class UserInputMethods {
 
 		default :
 			gameScreen.infoPanel.append("\nError retrieving card.");
+		}
+		
+		//increment the card number
+		cardNum++;
+		//if reached end of card pile loop around to first card again
+		if (cardNum == gameScreen.ChanceCards.size()) {
+			 cardNum = 0;
 		}
 	}
 
